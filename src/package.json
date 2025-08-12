@@ -2,9 +2,9 @@
   "name": "dev-match",
   "version": "1.0.0",
   "description": "Match making website for devs",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node src/app.js",
+    "start": "nodemon src/app.js",
     "dev": "nodemon src app.js"
   },
   "keywords": [
