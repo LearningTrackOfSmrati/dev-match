@@ -52,51 +52,6 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth, async (req,res)=>
    
 })
 
-//request/review/:status/:requestId
-
-// requestRouter.post("/request/review/:status/:requestId", userAuth, async(req,res)=>{
-//     //loggedIn user valid
-//     //status:interested
-//     //logedin use:touser
-//     //requestId should be valid 
-//     //requestId= who made the request
-
-//     try{
-//     const {status, requestId} = req.params;
-
-//     const loggedInUser = req.user;
-
-//     console.log(status);
-//     console.log("requestId", requestId);
-//     console.log("loggedInUser", loggedInUser._id);
-//     const allowedStatus = ["accepted", "rejected"];
-//     if(!allowedStatus.includes(status)){
-//         return res.status(400).send("Status is invalid!!");
-//     }
-
-//     const ConnectionRequestData = await ConnectionRequest.findOne({
-//         _id: requestId,
-//         toUserId: loggedInUser._id,
-//         status: "interested",
-
-//     })
-
-//     if(!ConnectionRequestData) {
-//         return res.status(400).json({
-//             message:"Connection request not found", 
-//         })
-//     }
-
-//     ConnectionRequestData.status = status;
-
-//     const data = await ConnectionRequestData.save();
-//     res.json({message:"connection request "+ status, data})
-    
-// }catch(err){
-//     res.status(400).json({message: "Connection request catch error "+ err.message});
-// }
-// })
-
 const mongoose = require("mongoose");
 
 requestRouter.post("/request/review/:status/:requestId", userAuth, async (req, res) => {
