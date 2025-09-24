@@ -1,41 +1,78 @@
 const express = require("express");
-
+const connectDB = require("./config/database");
 const app = express();
+const  User = require("./modals/user")
 
-app.get("/user/:userId/:name/:password", (req, res)=>{
-    console.log(req.query);
-    console.log(req.params);
-    res.send({firstName: "Smrati", lastName:" Tiwari"});
-})
-//In use?r , ? will make e optional in user, call will work with usr too
-//In ab+c , + means now abbbbbc will also work, i can add multiple letter befor +
-//ab*cd means you can write anything between ab and cd
-//a(bc)d, bc is optional, ad will also work
-//we can write regex too in place of user...like ".*fly$", means anything which start with * or end with fly will work, also /a/ means anything which have a will work...
-app.post("/user", (req,res)=>{
-    res.send("Data saved succesfully");
-})
-app.delete("/user", (req,res)=>{
-    res.send("Deleted succesfully");
-})
-app.patch("/user", (req,res)=>{
-    res.send("patch succesfully");
-})
-app.put("/user", (req,res)=>{
-    res.send("put succesfully");
-})
-app.use("/fog",(req,res)=>{ 
-    res.send("Namaste ");
-})
+const cookieParser = require("cookie-parser");
 
-//use will match all the HTTP methods, like get post put patch delete... so for get we need to use get
-app.use("/test",(req,res)=>{ 
-    res.send("Hello From the server");
+
+app.use(express.json());
+app.use(cookieParser());
+const authRouter= require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
+const userRouter = require("./routes/user");
+
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+app.use("/", userRouter);
+
+
+app.get("/user", async (req,res)=>{
+    const _id = req.body._id;
+    try{
+        const user = await User.findById({_id})
+        res.send(user);
+    }catch(err){
+        res.status(400).send("Error saving the user:"+ err.message)
+    }
 })
 
-// app.use("/",(req,res)=>{ 
-//     res.send("Pranam");
-// })
-app.listen(3000, ()=>{
-    console.log("Server is successfully listening on port");
-});
+app.get("/feed", async (req,res)=>{
+   try{
+        const user = await User.find({})
+        res.send(user);
+    }catch(err){
+        res.status(400).send("Error saving the user:"+ err.message)
+    }
+})
+
+app.delete("/user", async (req,res)=>{
+    const _id = req.body._id;
+    try{
+         const user = await User.findByIdAndDelete({_id})
+        res.send("deleted successfully");
+     }catch(err){
+         res.status(400).send("Error saving the user:"+ err.message)
+     }
+ })
+
+ app.patch("/user/:userId", async (req,res)=>{
+    const _id = req.params.userId;
+    try{
+        const ALLOWED_UPDATES=["photoUrl","gender","about","age","password","skills"];
+        const isUpdateAllowed = Object.keys(req.body).every((k)=>ALLOWED_UPDATES.includes(k));
+        console.log(req.body?.skills.length)
+        if(!isUpdateAllowed){
+           throw new Error("Update not allowed")
+        }
+        if(req.body?.skills.length>4){
+            throw new Error("skills can not be more than 4")
+        }
+        const user = await User.findByIdAndUpdate({_id}, req.body, { returnDocument:"after", runValidators:true});
+        //console.log(user);
+        res.send("data updated sucessfully");
+    }catch(err){
+        res.status(400).send("Error while updating"+ err.message);
+    }
+ })
+connectDB().then(()=>{
+    console.log("Database connection established...");
+    app.listen(3000, ()=>{
+        console.log("Server is listening onn port 3000...");
+    })
+ }).catch((err)=>{
+    console.log("Database cannot be connected!!");
+ })
+
