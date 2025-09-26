@@ -72,9 +72,10 @@ userSchema.methods.getJWTToken= async function () {
   return token;
 }
 
-userSchema.methods.validatePassword=function(passwordEnteredByUser){
+userSchema.methods.validatePassword=async function(passwordEnteredByUser){
     const user=this;
-    const isPassword = bcrypt.compare(passwordEnteredByUser, user.password);
+   
+    const isPassword = await bcrypt.compare(passwordEnteredByUser, user.password);
     return isPassword;
 }
 module.exports = mongoose.model("User", userSchema); 
