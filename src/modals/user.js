@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
             throw new Error("Not a valid URL")
          }
         },
-        default: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmedium.com%2F%40pruthvimandaliya007%2Fjavascript-interview-question-event-loop-853cc845b075&psig=AOvVaw0bZU6TkCRtUbGYfS4VULCS&ust=1755877498558000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCOD4scefnI8DFQAAAAAdAAAAABAE"
+        default: "https://media.istockphoto.com/id/690897378/photo/i-take-my-spiritually-very-seriously.jpg?s=612x612&w=0&k=20&c=Oga5fOiSB-lDq5mBYcyV7pvnijUfFMbpVXmoMhFM-mc="
     },
     about: {
         type: String,
